@@ -1,53 +1,45 @@
 <template>
-  <div class="holder">
-    <form class="container" @submit.prevent="signup">
-      <input type="email" id="email" v-model="email" placeholder="Your email" required />
-      <input type="password" id="password" v-model="password" placeholder="Your password" required />
-      <button  class="call_to_action" type="submit">log in</button>
-    </form>
-    <span>Or</span>
-    <button>
-      <span>Log in with google</span>
-    </button>
-
-  </div>
+    <div id="form_holder" >
+        <form class="container" @submit.prevent="addOrder">
+            <input type="text" id="item" v-model="item" placeholder="Your Item name" required />
+            <input type="number" id="amount" v-model="amount" placeholder="The amount" required />
+            <button  class="call_to_action" type="submit">Add order</button>
+        </form>
+    </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import config from '../config';
 import { useUserStore } from '../stores/counter.js';
-import { useRouter } from 'vue-router';
+import router from '@/router';
 
-const router = useRouter();
+const apiUrl = `${config.baseUrl}/orders`;
+const userStore = useUserStore();
+const token = userStore.token;
+console.log(token);
+const item = ref('');
+const amount = ref('');
+const customerId = useUserStore().user.user_id
 
-const apiUrl = `${config.baseUrl}/customers/log_in`;
-
-const email = ref('');
-const password = ref('');
-
-const signup = async () => {
+const addOrder = async () => {
   try {
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value,
+        item: item.value,
+        amount: amount.value,
+        customer_id: customerId,
       }),
     });
     if (response.ok) {
-      const responseData = await response.json();
-
-      useUserStore().setUser( responseData.user);
-      useUserStore().setTokens(responseData.token); 
-      useUserStore().setAuth()
       router.push('/order');
     } else {
       console.error('Failed to fetch authentication token:', response.statusText);
-      // Handle the failure scenario, e.g., display an error message
     }
   } catch (error) {
     console.error('Error signing up:', error);
@@ -56,13 +48,8 @@ const signup = async () => {
 </script>
 
 <style scoped>
-.holder{
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
 form{
+
   display: flex;
   flex-direction: column;
 }
@@ -90,13 +77,20 @@ input{
   border-radius: 10px;
   border: 1px solid #000;
 }
+#form_holder{
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    height: 80%;
+    width: 100%;
+}
 button{
     background-color: white;
     color: black;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
+    height: 70px;
     border-radius: 20px;
 }
 </style>

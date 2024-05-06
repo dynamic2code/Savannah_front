@@ -1,6 +1,7 @@
 @import './base.css';
 a{
   all: unset;
+  cursor: grab;
 }
 .button{
   display: flex;
