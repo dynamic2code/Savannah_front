@@ -5,17 +5,17 @@
             <img src="@/assets/images/deliver.jpg" alt="">
         </div>
         <div class="details">
-            <span>item</span>
-            <span>amount</span>
-            <span>time</span>
+            <span>{{order.item}}</span>
+            <span>{{order.amount}}</span>
+            <span>{{order.time}}</span>
         </div>
     </div>
 </template>
 
 <script setup>
-// defineProps({
-//     order: Object
-// })
+defineProps({
+    order: Object
+})
 </script>
 
 <style scoped>

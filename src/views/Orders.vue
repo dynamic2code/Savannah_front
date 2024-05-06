@@ -3,8 +3,7 @@
     <div class="holder">
   
         <div class="container">
-            <Order/>
-            <!-- <Order v-for="order in orders"  :order="order"></Order> -->
+            <Order v-for="order in orders"  :order="order"></Order>
         </div>
     </div>
 </template>
@@ -55,4 +54,7 @@ onMounted(() => {
 </script>
 
 <style scoped> 
+.container{
+  flex-direction: column;
+}
 </style>
